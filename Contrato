@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gerador de Contrato de Locação</title>
+<style>
+  body { font-family: Arial, sans-serif; margin: 20px; background-color: #f5f5f5; }
+  h1 { text-align: center; }
+  .container { max-width: 900px; margin: auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);}
+  label { display: block; margin-top: 10px; font-weight: bold; }
+  input, textarea, select { width: 100%; padding: 8px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc; }
+  button { margin-top: 20px; padding: 10px 20px; font-size: 16px; border: none; border-radius: 5px; background-color: #4CAF50; color: white; cursor: pointer; }
+  button:hover { background-color: #45a049; }
+  #contratoOutput { white-space: pre-wrap; border: 1px solid #ccc; padding: 15px; margin-top: 20px; background: #fafafa; border-radius: 5px; max-height: 600px; overflow-y: auto;}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Gerador de Contrato de Locação Residencial</h1>
+
+<form id="contratoForm">
+  <h2>Informações do Locador</h2>
+  <label>Nome:</label><input type="text" id="locadorNome" required>
+  <label>Nacionalidade:</label><input type="text" id="locadorNacionalidade">
+  <label>Estado Civil:</label><input type="text" id="locadorEstadoCivil">
+  <label>RG:</label><input type="text" id="locadorRG" required>
+  <label>CPF:</label><input type="text" id="locadorCPF" required>
+  <label>Endereço:</label><input type="text" id="locadorEndereco" required>
+
+  <h2>Informações do Locatário</h2>
+  <label>Nome:</label><input type="text" id="locatarioNome" required>
+  <label>Nacionalidade:</label><input type="text" id="locatarioNacionalidade">
+  <label>Estado Civil:</label><input type="text" id="locatarioEstadoCivil">
+  <label>RG:</label><input type="text" id="locatarioRG" required>
+  <label>CPF:</label><input type="text" id="locatarioCPF" required>
+  <label>Endereço:</label><input type="text" id="locatarioEndereco" required>
+
+  <h2>Informações do Fiador</h2>
+  <label>Nome:</label><input type="text" id="fiadorNome">
+  <label>Nacionalidade:</label><input type="text" id="fiadorNacionalidade">
+  <label>Estado Civil:</label><input type="text" id="fiadorEstadoCivil">
+  <label>RG:</label><input type="text" id="fiadorRG">
+  <label>CPF:</label><input type="text" id="fiadorCPF">
+  <label>Endereço:</label><input type="text" id="fiadorEndereco">
+
+  <h2>Informações do Imóvel</h2>
+  <label>Endereço:</label><input type="text" id="imovelEndereco" required>
+  <label>Cidade:</label><input type="text" id="imovelCidade" required>
+  <label>Estado:</label><input type="text" id="imovelEstado" required>
+  <label>Matrícula:</label><input type="text" id="imovelMatricula">
+
+  <h2>Condições do Contrato</h2>
+  <label>Prazo (meses):</label><input type="number" id="prazoMeses" required>
+  <label>Data de Início:</label><input type="date" id="inicioContrato" required>
+  <label>Data de Término:</label><input type="date" id="fimContrato" required>
+  <label>Valor do Aluguel (R$):</label><input type="number" id="valorAluguel" step="0.01" required>
+  <label>Forma de Pagamento:</label><input type="text" id="formaPagamento">
+  <label>Reajuste anual pelo índice:</label><input type="text" id="indiceReajuste">
+
+  <h2>Local e Data</h2>
+  <label>Cidade:</label><input type="text" id="localContrato" required>
+  <label>Data:</label><input type="date" id="dataContrato" required>
+
+  <button type="button" onclick="gerarContrato()">Gerar Contrato</button>
+  <button type="button" onclick="imprimirContrato()">Imprimir Contrato</button>
+  <button type="button" onclick="salvarContrato()">Salvar Contrato</button>
+</form>
+
+<div id="contratoOutput"></div>
+</div>
+
+<script>
+function gerarContrato() {
+  const locadorNome = document.getElementById('locadorNome').value;
+  const locadorNacionalidade = document.getElementById('locadorNacionalidade').value;
+  const locadorEstadoCivil = document.getElementById('locadorEstadoCivil').value;
+  const locadorRG = document.getElementById('locadorRG').value;
+  const locadorCPF = document.getElementById('locadorCPF').value;
+  const locadorEndereco = document.getElementById('locadorEndereco').value;
+
+  const locatarioNome = document.getElementById('locatarioNome').value;
+  const locatarioNacionalidade = document.getElementById('locatarioNacionalidade').value;
+  const locatarioEstadoCivil = document.getElementById('locatarioEstadoCivil').value;
+  const locatarioRG = document.getElementById('locatarioRG').value;
+  const locatarioCPF = document.getElementById('locatarioCPF').value;
+  const locatarioEndereco = document.getElementById('locatarioEndereco').value;
+
+  const fiadorNome = document.getElementById('fiadorNome').value || '-';
+  const fiadorNacionalidade = document.getElementById('fiadorNacionalidade').value || '-';
+  const fiadorEstadoCivil = document.getElementById('fiadorEstadoCivil').value || '-';
+  const fiadorRG = document.getElementById('fiadorRG').value || '-';
+  const fiadorCPF = document.getElementById('fiadorCPF').value || '-';
+  const fiadorEndereco = document.getElementById('fiadorEndereco').value || '-';
+
+  const imovelEndereco = document.getElementById('imovelEndereco').value;
+  const imovelCidade = document.getElementById('imovelCidade').value;
+  const imovelEstado = document.getElementById('imovelEstado').value;
+  const imovelMatricula = document.getElementById('imovelMatricula').value || '-';
+
+  const prazoMeses = document.getElementById('prazoMeses').value;
+  const inicioContrato = document.getElementById('inicioContrato').value;
+  const fimContrato = document.getElementById('fimContrato').value;
+  const valorAluguel = document.getElementById('valorAluguel').value;
+  const formaPagamento = document.getElementById('formaPagamento').value || '-';
+  const indiceReajuste = document.getElementById('indiceReajuste').value || '-';
+
+  const localContrato = document.getElementById('localContrato').value;
+  const dataContrato = document.getElementById('dataContrato').value;
+
+  const contratoTexto = `
+CONTRATO DE LOCAÇÃO RESIDENCIAL
+
+LOCADOR: Ilmo. Sr. ${locadorNome}, ${locadorNacionalidade}, ${locadorEstadoCivil}, RG ${locadorRG}, CPF ${locadorCPF}, residente à ${locadorEndereco}.
+
+LOCATÁRIO: Ilmo. Sr. ${locatarioNome}, ${locatarioNacionalidade}, ${locatarioEstadoCivil}, RG ${locatarioRG}, CPF ${locatarioCPF}, residente à ${locatarioEndereco}.
+
+FIADOR: ${fiadorNome}, ${fiadorNacionalidade}, ${fiadorEstadoCivil}, RG ${fiadorRG}, CPF ${fiadorCPF}, residente à ${fiadorEndereco}.
+
+IMÓVEL: ${imovelEndereco}, ${imovelCidade} - ${imovelEstado}, Matrícula: ${imovelMatricula}.
+
+1) O LOCADOR cede para locação residencial ao LOCATÁRIO o imóvel acima.
+2) A locação destina-se ao uso exclusivo como residência do LOCATÁRIO.
+3) Prazo de locação: ${prazoMeses} meses, de ${inicioContrato} a ${fimContrato}.
+4) Valor do aluguel: R$ ${valorAluguel}, pago via ${formaPagamento}.
+5) Reajuste anual pelo índice: ${indiceReajuste}.
+
+Local e Data: ${localContrato}, ${dataContrato}
+
+____________________________      ____________________________      ____________________________
+        LOCADOR                             LOCATÁRIO                          FIADOR
+`;
+
+  document.getElementById('contratoOutput').textContent = contratoTexto;
+}
+
+function imprimirContrato() {
+  const conteudo = document.getElementById('contratoOutput').innerHTML;
+  const janela = window.open('', '', 'width=800,height=600');
+  janela.document.write('<pre>' + conteudo + '</pre>');
+  janela.document.close();
+  janela.print();
+}
+
+function salvarContrato() {
+  const conteudo = document.getElementById('contratoOutput').textContent;
+  const blob = new Blob([conteudo], { type: "text/plain;charset=utf-8" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "Contrato_Locacao.txt";
+  link.click();
+}
+</script>
+</body>
+</html>
